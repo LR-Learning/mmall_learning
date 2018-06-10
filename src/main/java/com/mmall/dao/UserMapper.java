@@ -4,6 +4,7 @@ import com.mmall.pojo.User;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserMapper {
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(User record);
@@ -17,5 +18,13 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     int checkUsername(String username);
+
+    int checkEmail(String email);
+
+    // 传多个参数需要加MyBatis的注解
     User selectLogin(@Param("username") String username, @Param("password") String password);
+
+    String selectQuestionByUsername(String username);
+
+    int checkAnswer(@Param("username") String username, @Param("question") String question, @Param("answer") String answer);
 }

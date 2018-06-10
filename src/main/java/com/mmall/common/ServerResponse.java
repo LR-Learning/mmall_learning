@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * @Author: LR
- * @Descriprition:
+ * @Descriprition: 根据不同的参数来调用不同的数据类型
  * @Date: Created in 16:17 2018/6/9
  * @Modified By:
  **/
@@ -18,6 +18,7 @@ public class ServerResponse<T> implements Serializable {
     private String msg;
     private T data;
 
+    //构造函数
     private ServerResponse(int status){
         this.status = status;
     }
@@ -56,6 +57,8 @@ public class ServerResponse<T> implements Serializable {
         return data;
     }
 
+
+    // 开放静态方法
     public static <T> ServerResponse<T> createBySuccess(){
         return new ServerResponse<T>(ResponseCode.SUCCESS.getCode());
     }
