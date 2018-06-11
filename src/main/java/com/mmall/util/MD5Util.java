@@ -1,6 +1,9 @@
 package com.mmall.util;
 
+import ch.qos.logback.classic.gaffer.PropertyUtil;
+
 import java.security.MessageDigest;
+import java.util.Properties;
 
 /**
  * @Author: LR
