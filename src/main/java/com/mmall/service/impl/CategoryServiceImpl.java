@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements ICategoryService {
 
     // 添加分类
     public ServerResponse addCategory(String categoryName, Integer parentId){
-        if (parentId == null || StringUtils.isNotBlank(categoryName)){
+        if (parentId == null || StringUtils.isBlank(categoryName)){
             return ServerResponse.createByErrorMessage("添加品类参数错误");
         }
         Category category = new Category();
@@ -45,15 +45,15 @@ public class CategoryServiceImpl implements ICategoryService {
 
         int resultCount = categoryMapper.insert(category);
         if (resultCount > 0 ) {
-            ServerResponse.createBySuccessMessage("增加品类失败");
+            return ServerResponse.createBySuccess("增加品类成功");
         }
         return ServerResponse.createByErrorMessage("增加品类失败");
     }
 
     // 更新分类
     public ServerResponse updateCategory(Integer parentId, String categoryName){
-        if (parentId == null || StringUtils.isNotBlank(categoryName)){
-            return ServerResponse.createByErrorMessage("添加品类参数错误");
+        if (parentId == null || StringUtils.isBlank(categoryName)){
+            return ServerResponse.createByErrorMessage("更新品类参数错误");
         }
         Category category = new Category();
         category.setParentId(parentId);
@@ -100,7 +100,7 @@ public class CategoryServiceImpl implements ICategoryService {
         // 查找子节点， 递归算法一定要有递归条件
         // 返回的是MyBatis 的集合， 如果没查到不会返回null 对象
         List<Category> categoryList = categoryMapper.selectCategoryChildrenByParentId(categoryId);
-        for (Category categoryItem: categorySet) {
+        for (Category categoryItem: categoryList) {
             findChildCategory(categorySet, categoryItem.getId());
         }
         return categorySet;

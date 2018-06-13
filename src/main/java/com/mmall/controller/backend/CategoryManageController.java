@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -33,13 +34,13 @@ public class CategoryManageController {
     @Autowired
     private ICategoryService iCategoryService;
 
-    @RequestMapping("add_category.do")
+    @RequestMapping(value = "add_category.do", method = RequestMethod.GET)
     @ResponseBody
     // 添加分类
-    public ServerResponse addCategory(HttpSession session, String categoryName,@RequestParam(value = "parentId", defaultValue = "0") int parentId){
+    public ServerResponse addCategory(HttpSession session, String categoryName, @RequestParam(value = "parentId", defaultValue = "0") int parentId){
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户为登录， 请登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录， 请登录");
         }
         // 校验一下是否为管理员
         if (iUserService.checkAdmin(user).isSuccess()){
@@ -51,13 +52,13 @@ public class CategoryManageController {
 
     }
 
-    @RequestMapping("set_category_name.do")
+    @RequestMapping(value = "set_category_name.do", method = RequestMethod.GET)
     @ResponseBody
     // 更新品类名称
     public ServerResponse setCategoryName(HttpSession session, Integer parentId, String categoryName){
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户为登录， 请登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录， 请登录");
         }
         // 校验一下是否为管理员
         if (iUserService.checkAdmin(user).isSuccess()){
@@ -68,7 +69,7 @@ public class CategoryManageController {
         }
     }
 
-    @RequestMapping("get_category.do")
+    @RequestMapping(value = "get_category.do", method = RequestMethod.GET)
     @ResponseBody
     //获取平级子节点
     public ServerResponse getChildrenParallelCategory(HttpSession session, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId){
@@ -85,13 +86,13 @@ public class CategoryManageController {
         }
     }
 
-    @RequestMapping("get_deep_category.do")
+    @RequestMapping(value = "get_deep_category.do", method = RequestMethod.GET)
     @ResponseBody
     //获取当前category的ID，并且递归查询子节点的category的ID
     public ServerResponse getCategoryAndDeepChildrenCategory(HttpSession session, @RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId){
         User user = (User) session.getAttribute(Const.CURRENT_USER);
         if (user == null) {
-            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户为登录， 请登录");
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登录， 请登录");
         }
         // 校验一下是否为管理员
         if (iUserService.checkAdmin(user).isSuccess()){
