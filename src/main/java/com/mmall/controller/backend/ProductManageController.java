@@ -1,21 +1,29 @@
 package com.mmall.controller.backend;
 
+import com.google.common.collect.Maps;
 import com.mmall.common.Const;
 import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.Product;
 import com.mmall.pojo.User;
+import com.mmall.service.IFileService;
 import com.mmall.service.IProductionService;
 import com.mmall.service.IUserService;
+import com.mmall.util.PropertiesUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.Response;
+import java.util.Map;
 
 /**
  * @Author: LR
@@ -34,6 +42,9 @@ public class ProductManageController {
     @Autowired
     private IProductionService iProductionService;
 
+    @Autowired
+    private IFileService iFileService;
+
     @RequestMapping("save.do")
     @ResponseBody
     // 保存商品的接口
@@ -46,7 +57,7 @@ public class ProductManageController {
             // 填充增加产品的业务逻辑
             return iProductionService.saveOrUpdateProduct(product);
         }else{
-            return ServerResponse.createByErrorMessage("无权限操作， 请登录");
+            return ServerResponse.createByErrorMessage("无权限操作");
         }
     }
 
@@ -62,7 +73,7 @@ public class ProductManageController {
             // 更新产品销售状态
             return iProductionService.setSaleStatus(productId, status);
         }else{
-            return ServerResponse.createByErrorMessage("无权限操作， 请登录");
+            return ServerResponse.createByErrorMessage("无权限操作");
         }
     }
 
@@ -78,7 +89,7 @@ public class ProductManageController {
             //
             return iProductionService.manageProductDetail(productId);
         }else{
-            return ServerResponse.createByErrorMessage("无权限操作， 请登录");
+            return ServerResponse.createByErrorMessage("无权限操作");
         }
     }
 
@@ -94,7 +105,7 @@ public class ProductManageController {
             //
             return iProductionService.getProductList(pageNum, pageSize);
         }else{
-            return ServerResponse.createByErrorMessage("无权限操作， 请登录");
+            return ServerResponse.createByErrorMessage("无权限操作");
         }
     }
 
@@ -110,7 +121,61 @@ public class ProductManageController {
             //
             return iProductionService.searchProduct(productName, productId, pageNum, pageSize);
         }else{
-            return ServerResponse.createByErrorMessage("无权限操作， 请登录");
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+    }
+
+    @RequestMapping("upload.do")
+    @ResponseBody
+    // 上传文件
+    public ServerResponse upload(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file, HttpServletRequest request){
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "用户未登陆，请登录管理员身份");
+        }
+        if (iUserService.checkAdmin(user).isSuccess()){
+            String path = request.getSession().getServletContext().getRealPath("upload");
+            String targetFileName = iFileService.upload(file, path);
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFileName;
+
+            Map fileMap = Maps.newHashMap();
+            fileMap.put("uri", targetFileName);
+            fileMap.put("url", url);
+            return ServerResponse.createBySuccess(fileMap);
+        }else{
+            return ServerResponse.createByErrorMessage("无权限操作");
+        }
+    }
+
+    @RequestMapping("richtext_img_upload")
+    @ResponseBody
+    // 富文本中的文件上传
+    public Map richtextImgUpload(HttpSession session, @RequestParam(value = "upload_file", required = false) MultipartFile file, HttpServletRequest request, HttpServletResponse response){
+        Map resultMap = Maps.newHashMap();
+        User user = (User) session.getAttribute(Const.CURRENT_USER);
+        if (user == null) {
+            resultMap.put("success", false);
+            resultMap.put("msg", "用户为登录");
+            return resultMap;
+        }
+        // 富文本中对于返回值有自己的要求,我们按照simditor的要求进行返回
+        if (iUserService.checkAdmin(user).isSuccess()){
+            String path = request.getSession().getServletContext().getRealPath("upload");
+            String targetFileName = iFileService.upload(file, path);
+            if (StringUtils.isBlank(targetFileName)) {
+                resultMap.put("success", false);
+                resultMap.put("msg", "上传失败");
+            }
+            String url = PropertiesUtil.getProperty("ftp.server.http.prefix") + targetFileName;
+            resultMap.put("success", true);
+            resultMap.put("msg", "上传成功");
+            resultMap.put("file_path", url);
+            response.addHeader("Access-Control-Allow-Header", "X-File-Name");
+            return resultMap;
+        }else{
+            resultMap.put("success", false);
+            resultMap.put("msg", "无权限登录");
+            return resultMap;
         }
     }
 }
