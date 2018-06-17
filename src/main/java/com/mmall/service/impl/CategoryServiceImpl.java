@@ -76,7 +76,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     // 查询当前节点的id和递归子节点的id
-    public ServerResponse selectCategoryAndChildrenById(Integer categoryId){
+    public ServerResponse<List<Integer>> selectCategoryAndChildrenById(Integer categoryId){
         // 初始化参数，  Guava 提供的方法
         Set<Category>  categorySet = Sets.newHashSet();
         findChildCategory(categorySet, categoryId);
