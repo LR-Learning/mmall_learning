@@ -11,6 +11,7 @@ import com.mmall.pojo.Cart;
 import com.mmall.pojo.Product;
 import com.mmall.service.ICartService;
 import com.mmall.util.BigDecimalUtil;
+import com.mmall.util.PropertiesUtil;
 import com.mmall.vo.CartProductVo;
 import com.mmall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +59,7 @@ public class CartServiceImpl implements ICartService {
             cart.setQuantity(count);
             cartMapper.updateByPrimaryKeySelective(cart);
         }
-        CartVo cartVo = this.getCartVoLimit(userId);
-        return ServerResponse.createBySuccess(cartVo);
+        return this.list(userId);
     }
 
     // 更新
@@ -72,8 +72,7 @@ public class CartServiceImpl implements ICartService {
             cart.setQuantity(count);
         }
         cartMapper.updateByPrimaryKeySelective(cart);
-        CartVo cartVo = this.getCartVoLimit(userId);
-        return ServerResponse.createBySuccess(cartVo);
+        return this.list(userId);
     }
 
     // 删除
@@ -83,8 +82,27 @@ public class CartServiceImpl implements ICartService {
             return ServerResponse.createByErrorCodeMessage(ResponseCode.ILLEGAL_ARGUMENT.getCode(), ResponseCode.ILLEGAL_ARGUMENT.getDesc());
         }
         cartMapper.deleteByUserIdProductIds(userId, productList);
+        return this.list(userId);
+    }
+
+    // 查询
+    public ServerResponse<CartVo> list(Integer userId){
         CartVo cartVo = this.getCartVoLimit(userId);
         return ServerResponse.createBySuccess(cartVo);
+    }
+
+    // 单选/非单选
+    public ServerResponse<CartVo> selectOrUnselect(Integer userId, Integer checked, Integer productId){
+        cartMapper.checkedOrUncheckedProduct(userId, checked, productId);
+        return this.list(userId);
+    }
+
+    //获取用户购物车数量
+    public ServerResponse<Integer> getCartProduct(Integer userId){
+        if (userId == null) {
+            return ServerResponse.createBySuccess(0);
+        }
+        return ServerResponse.createBySuccess(cartMapper.selectCartProductCount(userId));
     }
 
     private CartVo getCartVoLimit(Integer userId){
@@ -114,6 +132,7 @@ public class CartServiceImpl implements ICartService {
                     // 判断库存
                     int buyLimitCount = 0;
                     if(product.getStock() >= cartItem.getQuantity()){
+                        buyLimitCount = cartItem.getQuantity();
                         cartProductVo.setLimitQuantity(Const.Cart.LIMIT_NUM_SUCCESS);
                     }else{
                         buyLimitCount = product.getStock();
@@ -141,7 +160,7 @@ public class CartServiceImpl implements ICartService {
         cartVo.setCartTotalPrice(cartTotalPrice);
         cartVo.setCartProductVoList(cartProductVoList);
         cartVo.setAllChecked(this.getAllCheckedStatus(userId));
-        cartVo.setImageHost("ftp.server.http.prefix");
+        cartVo.setImageHost(PropertiesUtil.getProperty("ftp.server.http.prefix"));
         return cartVo;
     }
 
