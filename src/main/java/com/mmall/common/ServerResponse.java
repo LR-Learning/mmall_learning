@@ -1,7 +1,7 @@
 package com.mmall.common;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;
 
@@ -11,8 +11,9 @@ import java.io.Serializable;
  * @Date: Created in 16:17 2018/6/9
  * @Modified By:
  **/
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL) // 禁止将值为空的字段返回
+//@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL) // 禁止将值为空的字段返回
 // 保证序列化json的时候， 如果是null的对象，key也会消失
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ServerResponse<T> implements Serializable {
     private int status;
     private String msg;
@@ -39,7 +40,7 @@ public class ServerResponse<T> implements Serializable {
         this.msg = msg;
     }
 
-    @JsonIgnore
+    @JsonIgnore // JSON序列化之后不会显示在JSON里面
     // 使之不在json序列化结果当中
     public boolean isSuccess(){
         return this.status==ResponseCode.SUCCESS.getCode();

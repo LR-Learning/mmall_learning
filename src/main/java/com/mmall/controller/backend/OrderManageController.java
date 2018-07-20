@@ -33,7 +33,7 @@ public class OrderManageController {
     private IOrderService iOrderService;
 
     // 后台订单列表页
-    @RequestMapping("orderList.do")
+    @RequestMapping("list.do")
     @ResponseBody
     public ServerResponse<PageInfo> orderList(HttpSession session, @RequestParam(value = "pageNum", defaultValue = "0") int pageNum,
                                          @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {

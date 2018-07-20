@@ -327,7 +327,7 @@ public class OrderServiceImpl implements IOrderService {
     public List<OrderVo> assembleOrderVoList(List<Order> orderList, Integer userId){
         List<OrderVo> orderVoList = Lists.newArrayList();
         for (Order order : orderList){
-            List<OrderItem> orderItemList= Lists.newArrayList();
+            List<OrderItem> orderItemList = Lists.newArrayList();
             if (userId == null) {
                 // todo 管理员查询的时候  不需要userId
                 orderItemList = orderItemMapper.getByOrderNo(order.getOrderNo());
