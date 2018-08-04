@@ -116,8 +116,10 @@ public class UserController {
         if (currentUser == null) {
             return ServerResponse.createByErrorMessage("用户未登录");
         }
+        // 得到当前用户的ID和用户名
         user.setId(currentUser.getId());
         user.setUsername(currentUser.getUsername());
+
         ServerResponse<User> response = iUserService.updateInformation(user);
         if (response.isSuccess()) {
             session.setAttribute(Const.CURRENT_USER, response.getData());
