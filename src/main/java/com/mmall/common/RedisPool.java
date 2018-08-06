@@ -46,14 +46,14 @@ public class RedisPool {
         return pool.getResource();
     }
 
-    // 把连接放回去
-//    public static void returnBrokenResource(Jedis jedis){
-//        pool.close();
-//    }
-//
-//    public static void returnResource(Jedis jedis){
-//        pool.close();
-//    }
+     // 把连接放回去
+    public static void returnBrokenResource(Jedis jedis){
+        pool.returnBrokenResource(jedis);
+    }
+
+    public static void returnResource(Jedis jedis){
+        pool.returnResource(jedis);
+    }
 
     public static void main(String[] args) {
         Jedis jedis = pool.getResource();

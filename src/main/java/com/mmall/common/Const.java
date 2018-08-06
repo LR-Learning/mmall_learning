@@ -14,11 +14,19 @@ public class Const {
     public static final String CURRENT_USER = "currentUser";
     public static final String EMAIL = "email";
     public static final String USERNAME = "username";
+
+
     // 使用内部接口类，把常量进行分组, 没有枚举重
     public interface ProductListOrderBy{
         // set的contains 的查找复杂度是O(1), List 是O(n)
         Set<String> PRICE_ASC_DESC = Sets.newHashSet("price_desc", "price_asc");
     }
+
+    public interface RedisCacheExtime {
+        int REDIS_SESSION_EXTIME = 60*30; // 30分钟
+    }
+
+
     public interface Cart{
         int CHECKED = 1; // 购物车选中状态
         int UN_CHECKED = 0; // 购物车未选中状态

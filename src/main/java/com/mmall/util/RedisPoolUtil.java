@@ -24,10 +24,10 @@ public class RedisPoolUtil {
             result = jedis.expire(key, exTime);
         } catch (Exception e) {
             log.error("expire key:{} error", key, e);
-            jedis.close();
+            RedisPool.returnBrokenResource(jedis);
             return result;
         }
-        jedis.close();
+        RedisPool.returnResource(jedis);
         return result;
     }
 
@@ -47,10 +47,10 @@ public class RedisPoolUtil {
             result = jedis.setex(key, exTime, value);
         } catch (Exception e) {
             log.error("setex key:{} value:{} error", key, value, e);
-            jedis.close();
+            RedisPool.returnBrokenResource(jedis);
             return result;
         }
-        jedis.close();
+        RedisPool.returnResource(jedis);
         return result;
     }
 
@@ -63,10 +63,10 @@ public class RedisPoolUtil {
             result = jedis.set(key, value);
         } catch (Exception e) {
             log.error("set key:{} value:{} error", key, value, e);
-            jedis.close();
+            RedisPool.returnBrokenResource(jedis);
             return result;
         }
-        jedis.close();
+        RedisPool.returnResource(jedis);
         return result;
     }
 
@@ -79,10 +79,10 @@ public class RedisPoolUtil {
             result = jedis.get(key);
         } catch (Exception e) {
             log.error("get key:{} error", key, e);
-            jedis.close();
+            RedisPool.returnBrokenResource(jedis);
             return result;
         }
-        jedis.close();
+        RedisPool.returnResource(jedis);
         return result;
     }
 
@@ -95,10 +95,10 @@ public class RedisPoolUtil {
             result = jedis.del(key);
         } catch (Exception e) {
             log.error("del key:{} error", key, e);
-            jedis.close();
+            RedisPool.returnBrokenResource(jedis);
             return result;
         }
-        jedis.close();
+        RedisPool.returnResource(jedis);
         return result;
     }
 
