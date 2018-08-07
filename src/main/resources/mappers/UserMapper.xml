@@ -174,7 +174,7 @@
   </select>
   <select id="checkAnswer" resultType="int" parameterType="map">
     select count(1)
-    from mmal_user
+    from mmall_user
     where username = #{username}
     and question = #{question}
     and answer = #{answer}

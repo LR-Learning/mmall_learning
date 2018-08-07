@@ -14,6 +14,7 @@ public class Const {
     public static final String CURRENT_USER = "currentUser";
     public static final String EMAIL = "email";
     public static final String USERNAME = "username";
+    public static final String TOKEN_PREFIX = "Token_";
 
 
     // 使用内部接口类，把常量进行分组, 没有枚举重
