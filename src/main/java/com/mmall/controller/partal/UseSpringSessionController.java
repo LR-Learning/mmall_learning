@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @Author: LR
- * @Descriprition:
+ * @Descriprition: Spring Session 实现零侵入单点登录
  * @Date: Created in 9:51 2018/8/12
  * @Modified By:
  **/
@@ -34,6 +34,8 @@ public class UseSpringSessionController {
     @RequestMapping(value = "login.do", method = RequestMethod.GET)
     @ResponseBody // 将返回结果序列化为JSON
     public ServerResponse<User> login(String username, String password, HttpSession session, HttpServletResponse httpServletResponse){
+
+
         //service --> mybatis --> dao
         ServerResponse<User> response = iUserService.login(username, password);
 
