@@ -30,6 +30,8 @@ public interface IOrderService {
 
     ServerResponse<PageInfo> getOrderList(Integer userId, int pageNum, int pageSize);
 
+    //backend
+
     ServerResponse<PageInfo> manageList(int pageNum, int pageSize);
 
     ServerResponse<OrderVo> manageDetail(Long orderNo);
@@ -37,4 +39,7 @@ public interface IOrderService {
     ServerResponse<PageInfo> manageSearch(Long orderNo, int pageNum, int pageSize);
 
     ServerResponse<String> manageSendGoods(Long orderNo);
+
+    //hour个小时内未付款的订单进行关闭
+    void closeOrder(int hour);
 }
