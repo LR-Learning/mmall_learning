@@ -15,8 +15,12 @@
     <aop:aspectj-autoproxy/>
 
 
-
-
+    <!--<mvc:interceptors>-->
+        <!--<mvc:interceptor>-->
+            <!--<mvc:mapping path="/user/*"/>-->
+            <!--<bean class="com.mmall.interceptor.AuthorityIntercepter"/>-->
+        <!--</mvc:interceptor>-->
+    <!--</mvc:interceptors>-->
     <import resource="classpath:applicationContext-datasource.xml"/>
 
 
