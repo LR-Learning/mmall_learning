@@ -140,7 +140,7 @@ public class UserServiceImpl implements IUserService {
     public ServerResponse<String> forgetRestPassword(String username, String passwordNew, String forgetToken){
 
         // 判断Token是否为空
-        if (StringUtils.isNotBlank(forgetToken)) {
+        if (StringUtils.isBlank(forgetToken)) {
             return ServerResponse.createByErrorMessage("参数错误，token值需要传递");
         }
         // 判断用户名是否存在
@@ -192,7 +192,7 @@ public class UserServiceImpl implements IUserService {
         // email也要进行校验，校验新的email是否已经存在，并且存在新的email如果相同的话，不能是我们当前这个用户的
         int resultCount = userMapper.checkEmailByUserId(user.getEmail(), user.getId());
         if (resultCount > 0){
-            return ServerResponse.createByErrorMessage("email以存在， 请更换email在重新尝试");
+            return ServerResponse.createByErrorMessage("email已存在， 请更换email在重新尝试");
         }
         User updateUser = new User();
         updateUser.setId(user.getId());

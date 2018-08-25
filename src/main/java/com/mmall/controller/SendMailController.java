@@ -63,6 +63,6 @@ public class SendMailController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return ServerResponse.createBySuccess("发送成功");
+        return ServerResponse.createBySuccess(code);
     }
 }
