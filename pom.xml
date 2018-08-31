@@ -287,6 +287,18 @@
       <artifactId>spring-context-support</artifactId>
       <version>4.2.6.RELEASE</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.redisson</groupId>
+      <artifactId>redisson</artifactId>
+      <version>2.11.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-avro</artifactId>
+      <version>2.9.6</version>
+    </dependency>
   </dependencies>
 
 

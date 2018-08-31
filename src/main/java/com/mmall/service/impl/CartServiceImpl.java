@@ -105,6 +105,7 @@ public class CartServiceImpl implements ICartService {
         return ServerResponse.createBySuccess(cartMapper.selectCartProductCount(userId));
     }
 
+    // 获得CartVo
     private CartVo getCartVoLimit(Integer userId){
         CartVo cartVo = new CartVo();
         List<Cart> cartList = cartMapper.selectCartByUserId(userId);
@@ -113,13 +114,16 @@ public class CartServiceImpl implements ICartService {
         // 数字在计算时 如何避免丢失精度
         BigDecimal cartTotalPrice = new BigDecimal("0");
 
+        // 判断购物车是否有东西
         if(org.apache.commons.collections.CollectionUtils.isNotEmpty(cartList)){
+            // 遍历购物车中的数据
             for (Cart cartItem : cartList) {
                 CartProductVo cartProductVo = new CartProductVo();
                 cartProductVo.setId(cartItem.getId());
                 cartProductVo.setUserId(cartItem.getUserId());
                 cartProductVo.setProductId(cartItem.getProductId());
 
+                // 从购物车中的产品ID查找到具体的产品信息
                 Product product = productMapper.selectByPrimaryKey(cartItem.getProductId());
                 if (product != null) {
                     cartProductVo.setProductMainImage(product.getMainImage());
